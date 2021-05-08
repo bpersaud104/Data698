@@ -1,0 +1,81 @@
+---
+title: "Data Collection and Analysis"
+author: "Bryan Persaud"
+date: "5/11/2021"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r}
+# Libraries
+library(tidyverse)
+```
+
+Two datasets were collected from Kaggle. The first one shows different streaming services, Netflix, Hulu, Amazon Prime Video, and Disney+. The second one shows the number of subscribers for Netflix.
+
+# Data Exploration
+
+Let's explore these datasets a little to see what they contain.
+
+```{r}
+shows <- read.csv("~/DATA 698/Data Collection and Analysis/Datasets/tv_shows.csv")
+summary(shows)
+head(shows, 50)
+```
+
+The first dataset has each observation as a different TV show, there are 5611 different observation. Each of them is shown the year the show came out, the IMDb and Rotten Tomatoes rating, and whether the show is in the specified streaming service. A value of 1 means that the show is included in the streaming service and a value of 0 means that the show is not in the streaming service.
+
+```{r}
+Netflix_subs <- read.csv("~/DATA 698/Data Collection and Analysis/Datasets/DataNetflixSubscriber2020_V2.csv")
+head(Netflix_subs, 40)
+```
+
+The second dataset has each observation as a certain area for each quarter from the year 2018 to 2020. There are 40 observations showing 4 quarters for the year 2018 and 2019, and the first two quarters for the year 2020. The number of subscribers are shown for each area by the quarter of that year.
+
+# Data Analysis
+
+```{r}
+Netflix <- shows %>%
+  select(Title, Year, Age, IMDb, Rotten.Tomatoes, Netflix) %>%
+  filter(Netflix == 1) %>%
+  group_by(Title)
+Netflix
+```
+
+```{r}
+Hulu <- shows %>%
+  select(Title, Year, Age, IMDb, Rotten.Tomatoes, Hulu) %>%
+  filter(Hulu == 1) %>%
+  group_by(Title)
+Hulu
+```
+
+```{r}
+Prime_video <- shows %>%
+  select(Title, Year, Age, IMDb, Rotten.Tomatoes, Prime.Video) %>%
+  filter(Prime.Video == 1) %>%
+  group_by(Title)
+Prime_video
+```
+
+```{r}
+Disney_plus <- shows %>%
+  select(Title, Year, Age, IMDb, Rotten.Tomatoes, Disney.) %>%
+  filter(Disney. == 1) %>%
+  group_by(Title)
+Disney_plus
+```
+
+From sorting the data we see what shows are available for each streaming services, Netflix, Hulu, Prime video, and Disney+. We see that Prime Video contains more shows than the other streaming services while Disney+ contains the least amount. From the data we can see that Netflix contains more shows that have higher ratings. This is based on the IMDb and Rotten Tomatoes scores.
+
+```{r}
+ggplot(Netflix, aes(x = Title, y = IMDb)) + geom_point()
+ggplot(Hulu, aes(x = Title, y = IMDb)) + geom_point()
+ggplot(Prime_video, aes(x = Title, y = IMDb)) + geom_point()
+ggplot(Disney_plus, aes(x = Title, y = IMDb)) + geom_point()
+```
+
+Since Netflix and Amazon Prime Video seem to be two of the biggest streaming services let us look into the number of people who have subscribed to these services over the years. This will give us an insight on whether people are using these services and how much they have grown. I will be using data I found on Netflix subscriptions to show this.
+
+For the second dataset since the data is split by different regions and shows the number of subscribers from the year 2018 to the first half of 2020 a shiny app was created to visualize the data. For this visualization a shiny app was created. It can be viewed here:
